@@ -31,3 +31,11 @@ class InvalidFileError(Exception):
     def __init__(self, message: str = "File is invalid or unreadable") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class NotFoundError(Exception):
+    """Raised when a requested resource (e.g. file ID) does not exist."""
+
+    def __init__(self, message: str = "Resource not found") -> None:
+        self.message = message
+        super().__init__(self.message)
