@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="polygons" id="polygons">
+	<SimpleField name="category" type="string"></SimpleField>
+</Schema>
+<Folder><name>polygons</name>
+  <Placemark id="polygons.1">
+	<name>1km_square</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#polygons">
+		<SimpleData name="category">farmland</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>78.49,17.38 78.4994,17.38 78.4994,17.389 78.49,17.389 78.49,17.38</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark id="polygons.2">
+	<name>holed_polygon</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#polygons">
+		<SimpleData name="category">park</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>78.51,17.38 78.53,17.38 78.53,17.4 78.51,17.4 78.51,17.38</coordinates></LinearRing></outerBoundaryIs><innerBoundaryIs><LinearRing><coordinates>78.515,17.385 78.525,17.385 78.525,17.395 78.515,17.395 78.515,17.385</coordinates></LinearRing></innerBoundaryIs></Polygon>
+  </Placemark>
+</Folder>
+</Document></kml>

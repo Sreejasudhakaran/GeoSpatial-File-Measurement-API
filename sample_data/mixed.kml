@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="mixed" id="mixed">
+	<SimpleField name="feat_type" type="string"></SimpleField>
+</Schema>
+<Folder><name>mixed</name>
+  <Placemark id="mixed.1">
+	<name>poi_point</name>
+	<ExtendedData><SchemaData schemaUrl="#mixed">
+		<SimpleData name="feat_type">point</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>78.49,17.38</coordinates></Point>
+  </Placemark>
+  <Placemark id="mixed.2">
+	<name>road_line</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#mixed">
+		<SimpleData name="feat_type">line</SimpleData>
+	</SchemaData></ExtendedData>
+      <LineString><coordinates>78.49,17.38 78.5,17.39</coordinates></LineString>
+  </Placemark>
+  <Placemark id="mixed.3">
+	<name>building_poly</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#mixed">
+		<SimpleData name="feat_type">polygon</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>78.5,17.4 78.51,17.4 78.51,17.41 78.5,17.4</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder>
+</Document></kml>

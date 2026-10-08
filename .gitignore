@@ -1,0 +1,50 @@
+# --- Secrets & Environment Variables ---
+.env
+.env.*
+*.env
+*.pem
+*.key
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Python Cache & Bytecode ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+
+# --- Databases & SQLite artifacts ---
+geo.db
+*.db
+*.sqlite
+*.sqlite3
+*-wal
+*-shm
+*-journal
+
+# --- Runtime Uploaded File Storage ---
+storage/
+
+# --- Testing & Coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# --- Logs ---
+*.log
+
+# --- IDE & Editor files ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- Operating System artifacts ---
+.DS_Store
+Thumbs.db
+desktop.ini
