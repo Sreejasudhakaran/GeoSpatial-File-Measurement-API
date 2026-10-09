@@ -18,3 +18,10 @@ def test_health_returns_ok() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_root_redirects_to_docs() -> None:
+    """GET / should redirect to /docs with HTTP 307."""
+    response = client.get("/", follow_redirects=False)
+    assert response.status_code == 307
+    assert response.headers["location"] == "/docs"

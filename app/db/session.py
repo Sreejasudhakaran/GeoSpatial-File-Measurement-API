@@ -40,7 +40,7 @@ def set_sqlite_pragma(dbapi_connection: object, connection_record: object) -> No
     """
     # Check if the underlying DBAPI connection is sqlite3
     if "sqlite" in type(dbapi_connection).__module__:
-        cursor = getattr(dbapi_connection, "cursor")()
+        cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 

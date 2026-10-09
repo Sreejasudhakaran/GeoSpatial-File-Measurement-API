@@ -15,6 +15,7 @@ Verifies:
 
 from collections.abc import Generator
 from pathlib import Path
+
 import pytest
 from sqlalchemy import create_engine, event, select
 from sqlalchemy.orm import Session, sessionmaker
@@ -26,7 +27,7 @@ from app.core.errors import (
     NotFoundError,
     UnsupportedFileTypeError,
 )
-from app.db.models import Base, Feature, UploadedFile
+from app.db.models import Base, UploadedFile
 from app.services.file_service import get_file, get_measurements, process_upload
 
 SAMPLE_DATA_DIR = Path(__file__).resolve().parent.parent / "sample_data"
@@ -42,7 +43,7 @@ def db_session() -> Generator[Session, None, None]:
 
     @event.listens_for(test_engine, "connect")
     def set_sqlite_pragma(dbapi_connection: object, connection_record: object) -> None:
-        cursor = getattr(dbapi_connection, "cursor")()
+        cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 

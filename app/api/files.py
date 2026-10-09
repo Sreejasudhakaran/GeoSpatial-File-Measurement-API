@@ -36,7 +36,7 @@ router = APIRouter(prefix="/api/files", tags=["files"])
 )
 async def upload_file(
     file: Annotated[UploadFile, File(description="Geospatial file (.zip Shapefile archive or .kml)")],
-    db: Session = Depends(get_db),
+    db: Annotated[Session, Depends(get_db)],
 ) -> FileResponse:
     """Handle multipart file upload, persist, and execute synchronous feature measurement."""
     content: bytes = await file.read()
@@ -62,7 +62,7 @@ async def upload_file(
 )
 def get_file_info(
     id: str,
-    db: Session = Depends(get_db),
+    db: Annotated[Session, Depends(get_db)],
 ) -> FileResponse:
     """Retrieve metadata, feature count, and processing status for an uploaded file."""
     return get_file(db=db, file_id=id)
@@ -80,9 +80,9 @@ def get_file_info(
 )
 def get_file_measurements(
     id: str,
+    db: Annotated[Session, Depends(get_db)],
     limit: Annotated[int, Query(ge=1, le=1000, description="Max records to return")] = 100,
     offset: Annotated[int, Query(ge=0, description="Records to skip")] = 0,
-    db: Session = Depends(get_db),
 ) -> MeasurementsResponse:
     """Retrieve paginated feature geometries, attributes, and planar measurements."""
     items, total = get_measurements(

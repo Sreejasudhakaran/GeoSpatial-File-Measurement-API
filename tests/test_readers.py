@@ -11,9 +11,8 @@ Verifies:
 - Unsupported file extension raises InvalidFileError
 """
 
-from pathlib import Path
-import tempfile
 import zipfile
+from pathlib import Path
 
 import pytest
 

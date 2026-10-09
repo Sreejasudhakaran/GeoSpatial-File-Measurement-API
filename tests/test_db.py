@@ -15,7 +15,6 @@ from collections.abc import Generator
 
 import pytest
 from sqlalchemy import create_engine, event, select
-from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -34,7 +33,7 @@ def test_db_session() -> Generator[Session, None, None]:
     # Enable SQLite foreign key constraint enforcement
     @event.listens_for(test_engine, "connect")
     def set_sqlite_pragma(dbapi_connection: object, connection_record: object) -> None:
-        cursor = getattr(dbapi_connection, "cursor")()
+        cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 

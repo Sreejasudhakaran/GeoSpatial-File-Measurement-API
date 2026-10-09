@@ -92,5 +92,5 @@ def to_wgs84(geometry: BaseGeometry, source_crs: Any) -> BaseGeometry:
         geometry,
         transformer.transform,
         interleaved=False,
-        include_z=True if geometry.has_z else False,
+        include_z=bool(geometry.has_z),
     )

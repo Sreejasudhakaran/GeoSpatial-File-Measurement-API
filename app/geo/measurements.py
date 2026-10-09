@@ -13,8 +13,6 @@ import pyproj
 import shapely
 import shapely.validation
 from shapely.geometry import (
-    GeometryCollection,
-    LinearRing,
     LineString,
     MultiLineString,
     MultiPoint,
@@ -139,12 +137,12 @@ def measure(geometry: BaseGeometry | None, source_crs: Any) -> Measurement:
             warning=warning or f"unsupported geometry type: {proj_geom.geom_type}",
         )
 
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - isolation guarantee: never raise on bad geometry
         # 9. Total isolation guarantee: Never crash or raise an unhandled exception
         return Measurement(
             status=STATUS_ERROR,
             area_m2=None,
             length_m=None,
             projected_crs=None,
-            warning=f"measurement failed: {str(exc)}",
+            warning=f"measurement failed: {exc!s}",
         )

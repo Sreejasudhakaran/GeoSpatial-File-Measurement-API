@@ -9,7 +9,7 @@ Verifies:
 """
 
 import pytest
-from shapely.geometry import LineString, Point, Polygon
+from shapely.geometry import Point, Polygon
 
 from app.geo.crs import pick_projected_crs, to_wgs84
 

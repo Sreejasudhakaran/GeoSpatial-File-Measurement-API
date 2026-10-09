@@ -5,11 +5,11 @@ Only wiring lives here — no business logic.
 Registers routers, startup lifespans, and global exception handlers.
 """
 
-from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.api.files import router as files_router
 from app.core.errors import (
@@ -93,6 +93,12 @@ async def not_found_handler(
 # ---------------------------------------------------------------------------
 
 app.include_router(files_router)
+
+
+@app.get("/", include_in_schema=False)
+def root() -> RedirectResponse:
+    """Redirect root path to interactive Swagger documentation."""
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/health", tags=["system"])

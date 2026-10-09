@@ -8,6 +8,7 @@ It must NEVER import FastAPI or SQLAlchemy.
 
 from dataclasses import dataclass, field
 from typing import Any
+
 from shapely.geometry.base import BaseGeometry
 
 # Status constants for measurements

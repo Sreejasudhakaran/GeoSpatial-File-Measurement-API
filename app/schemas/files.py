@@ -4,8 +4,8 @@ Pydantic schemas for file upload, metadata, and measurement responses.
 Follows Pydantic V2 style using BaseModel and ConfigDict.
 """
 
-from datetime import datetime
 import json
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -49,7 +49,7 @@ class MeasurementItem(BaseModel):
         if isinstance(v, str):
             try:
                 return json.loads(v)
-            except Exception:
+            except (json.JSONDecodeError, ValueError, TypeError):
                 return None
         return v
 

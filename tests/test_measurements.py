@@ -12,7 +12,6 @@ Verifies:
 - Proves the 'degree trap': raw geometry.area in EPSG:4326 is NOT metric area
 """
 
-import math
 import pyproj
 import pytest
 from shapely.geometry import (
@@ -44,8 +43,8 @@ def test_square_1km_hyderabad_area_and_geod_crosscheck() -> None:
     lon0, lat0 = 78.49, 17.38
 
     # Project 1,000 meters East (azimuth 90°) and 1,000 meters North (azimuth 0°)
-    lon1, lat_dummy, _ = geod.fwd(lon0, lat0, 90, 1000.0)
-    lon_dummy, lat1, _ = geod.fwd(lon0, lat0, 0, 1000.0)
+    lon1, _, _ = geod.fwd(lon0, lat0, 90, 1000.0)
+    _, lat1, _ = geod.fwd(lon0, lat0, 0, 1000.0)
 
     square_poly = Polygon([
         (lon0, lat0),

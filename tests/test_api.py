@@ -16,10 +16,12 @@ Verifies:
 
 from collections.abc import Generator
 from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from app.core.config import settings
 from app.db.models import Base
@@ -35,11 +37,12 @@ def api_client(tmp_path: Path) -> Generator[TestClient, None, None]:
     test_engine = create_engine(
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
     )
 
     @event.listens_for(test_engine, "connect")
     def set_sqlite_pragma(dbapi_connection: object, connection_record: object) -> None:
-        cursor = getattr(dbapi_connection, "cursor")()
+        cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 

@@ -16,9 +16,9 @@ Datasets created:
 """
 
 import os
-from pathlib import Path
 import tempfile
 import zipfile
+from pathlib import Path
 
 import geopandas as gpd
 from shapely.geometry import LineString, Point, Polygon

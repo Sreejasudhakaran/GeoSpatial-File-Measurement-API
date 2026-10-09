@@ -4,17 +4,17 @@ SQLAlchemy 2.0 database models.
 Follows modern DeclarativeBase, Mapped typing, and mapped_column declarations.
 """
 
+import uuid
 from datetime import datetime, timezone
 from typing import Any
-import uuid
 
 from sqlalchemy import (
+    JSON,
     DateTime,
     Float,
     ForeignKey,
     Index,
     Integer,
-    JSON,
     String,
     Text,
     UniqueConstraint,
@@ -24,7 +24,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
     """Declarative base class for all SQLAlchemy models."""
-    pass
 
 
 class UploadedFile(Base):

@@ -9,16 +9,15 @@ This module must NEVER import FastAPI or SQLAlchemy.
 
 import datetime
 import math
-from pathlib import Path
 import tempfile
-from typing import Any
 import zipfile
+from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
 import pyogrio
 import pyproj
-from shapely.geometry.base import BaseGeometry
 
 from app.core.errors import InvalidFileError
 from app.geo.models import FeatureRecord
@@ -72,7 +71,7 @@ def safe_extract_zip(zip_path: Path, dest: Path) -> None:
         raise InvalidFileError(f"corrupt or unreadable zip archive: {exc}")
     except InvalidFileError:
         raise
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         raise InvalidFileError(f"failed to extract zip archive: {exc}")
 
 
@@ -147,7 +146,7 @@ def read_shapefile_archive(zip_path: Path) -> list[FeatureRecord]:
 
         try:
             df = pyogrio.read_dataframe(shp_path)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             raise InvalidFileError(f"failed to read shapefile: {exc}")
 
         # Check for missing .prj file
@@ -186,7 +185,7 @@ def read_kml(path: Path) -> list[FeatureRecord]:
     """
     try:
         layers = pyogrio.list_layers(path)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         raise InvalidFileError(f"failed to read KML layers: {exc}")
 
     if len(layers) == 0:
@@ -200,7 +199,7 @@ def read_kml(path: Path) -> list[FeatureRecord]:
     for layer_name in layer_names:
         try:
             df = pyogrio.read_dataframe(path, layer=layer_name)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             raise InvalidFileError(f"failed to read KML layer '{layer_name}': {exc}")
 
         for _, row in df.iterrows():

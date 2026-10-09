@@ -10,10 +10,9 @@ SERVICE LAYER RESPONSIBILITIES:
 
 import json
 import logging
-from pathlib import Path
 import shutil
-from typing import Any
 import uuid
+from pathlib import Path
 
 import shapely.geometry
 from sqlalchemy import func, select
@@ -142,13 +141,13 @@ def process_upload(
             # Compute measurement with individual isolation
             try:
                 meas = measure(feat.geometry, feat.source_crs)
-            except Exception as m_exc:
+            except Exception as m_exc:  # noqa: BLE001 - per-feature isolation guarantee
                 meas = Measurement(
                     status=STATUS_ERROR,
                     area_m2=None,
                     length_m=None,
                     projected_crs=None,
-                    warning=f"measurement failed: {str(m_exc)}",
+                    warning=f"measurement failed: {m_exc!s}",
                 )
 
             # Serialize geometry to GeoJSON
@@ -189,7 +188,7 @@ def process_upload(
         # 7. Unhandled exception fallback
         logger.exception("Unexpected error processing file %s (%s)", filename, uploaded_file.id)
         uploaded_file.status = "FAILED"
-        uploaded_file.error_message = f"Processing error: {str(exc)}"
+        uploaded_file.error_message = f"Processing error: {exc!s}"
         db.commit()
         db.refresh(uploaded_file)
         return uploaded_file
