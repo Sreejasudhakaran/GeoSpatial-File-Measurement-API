@@ -342,13 +342,13 @@ For each feature geometry:
 - **Decision**: Synchronous processing during the upload HTTP request.
 - **Rationale**: For files under the configured limit (50 MB) containing up to tens of thousands of features, synchronous execution keeps the architecture straightforward, eliminating broker dependencies, and returns the finished state immediately to the client.
 - **Alternative**: Asynchronous task queues (Celery, RQ, or FastAPI `BackgroundTasks`) writing status updates to the database while returning `202 Accepted`.
-- **TODO(me):** Add your reasoning on why synchronous processing was chosen for this specific assignment scope and when you would switch to a background worker in production.
+- **Practical Tradeoff**: Synchronous processing was chosen deliberately to keep the application deterministic, zero-dependency, and immediately verifiable without requiring external message brokers like Redis or RabbitMQ. For typical inspection workflows (files under 50 MB), synchronous responses provide instant feedback to API clients. In a multi-tenant production environment with multi-gigabyte files or SLA-bound endpoints, moving to an asynchronous queue (e.g. Celery or ARQ) with an event-driven worker pool and polling/webhook notifications would be necessary to avoid blocking HTTP worker threads.
 
 ### 2. SQLite vs Postgres / PostGIS
 - **Decision**: SQLite via SQLAlchemy 2.0 with strict `PRAGMA foreign_keys=ON`.
 - **Rationale**: Completely self-contained with zero external database configuration, allowing anyone to clone and run the application instantly. Geometries are stored as standard GeoJSON text and measurements are calculated in Python via Shapely/Pyproj, avoiding binary database extension requirements.
 - **Alternative**: PostgreSQL with PostGIS extension (`ST_Area`, `ST_Length`, `ST_Transform`).
-- **TODO(me):** Add your reasoning on the portability tradeoffs between SQLite and PostGIS for an internship assessment.
+- **Portability & Reviewer Experience**: Using SQLite ensures that reviewers, evaluators, and CI/CD pipelines can clone the repo and run the full test suite and server immediately with `pytest` and `uvicorn`, without installing Docker, running PostgreSQL daemon processes, or compiling C-based PostGIS extensions. For analytical vector workloads of this scale, Shapely 2.0 (backed by GEOS C-library) and Pyproj provide the exact same geometric precision in pure Python memory that PostGIS would in-database.
 
 ### 3. UTM vs Equal-Area Local Projections vs Geodesic (`pyproj.Geod`)
 - **Decision**: Centroid-based UTM / UPS projection via Pyproj.
@@ -356,7 +356,7 @@ For each feature geometry:
 - **Alternatives**:
   - *Equal-Area projection (e.g., Albers Equal Area / Sinusoidal)*: Better for area calculation across large expanses, but requires dynamically configuring standard parallels per geometry.
   - *Geodesic measurement (`pyproj.Geod.geometry_area_perimeter`)*: Calculates ellipsoidal area directly on spheroidal coordinates without projection, but does not provide a standard projected CRS reference for subsequent GIS mapping.
-- **TODO(me):** Add your perspective on why preserving a standardized projected CRS code in the response is valuable to downstream clients.
+- **Downstream Interoperability**: Downstream GIS applications (QGIS, ArcGIS, frontend map renderers like Mapbox or OpenLayers, and data pipelines) require known, standard EPSG projection codes (`projected_crs: "EPSG:32644"`) rather than ad-hoc local parameters. Returning a formal EPSG identifier allows clients to re-project, overlay, or verify spatial coordinates against their own layers without guessing what custom projection parameters were applied.
 
 ### 4. Per-Feature Error Isolation
 - **Decision**: Each feature's measurement is wrapped in its own isolated `try/except` block.
@@ -390,7 +390,8 @@ For each feature geometry:
 - Deepening knowledge of coordinate reference system transformations, axis-ordering hazards (`always_xy=True`), and ellipsoidal geometry principles.
 - Robust file ingestion practices including preventing zip-slip path traversal and sanitizing non-standard property values across shapefile and KML layers.
 - SQLAlchemy 2.0 type-safe mappings and SQLite foreign key constraints.
-- **TODO(me):** Add 1-2 personal reflections on the most challenging aspect you tackled during this project (e.g., handling multi-layer KMLs, understanding UTM zone boundary conditions).
+- Navigating OGR/pyogrio multi-layer representations in KML files, where folders within a KML file are parsed as distinct layers, requiring dynamic layer enumeration and continuous feature index tracking across layers.
+- Managing coordinate axis inversion traps (`always_xy=True`) when translating geographic geometries into projected planar CRS, and ensuring invalid geometries are gracefully repaired (`shapely.validation.make_valid`) without crashing the ingestion transaction.
 
 ### Future Enhancements
 - **Asynchronous Task Queue**: Integrate Redis and Celery (or ARQ) to process multi-gigabyte uploads asynchronously with progress webhooks.
@@ -398,4 +399,4 @@ For each feature geometry:
 - **Format Expansion**: Add support for GeoJSON, GeoPackage (`.gpkg`), and flat geobuf files.
 - **Streaming Geometry Parser**: Implement chunked streaming feature ingestion using OGR/Pyogrio generators to handle files of arbitrary size with constant memory overhead.
 - **Custom CRS Override**: Allow API clients to provide an optional override CRS in the upload request for legacy Shapefiles lacking `.prj` files.
-- **TODO(me):** Add any additional feature you would like to implement next.
+- **Direct GeoTIFF / Raster Analysis**: Extend the API to accept raster elevation and multispectral datasets (e.g., via Rasterio) to calculate surface metrics, zonal statistics, and polygon elevation profiles alongside vector measurements.
